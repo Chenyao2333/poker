@@ -49,7 +49,7 @@ def copy_file(source, target):
         shutil.copystat(source, target)
         #print("copystat", source)
 
-def pack(source, target, ignore):
+def pack(source, target, ignore = None):
     logging.info(source)
     if os.path.islink(source):
         link(source, target)
@@ -59,7 +59,12 @@ def pack(source, target, ignore):
 
     dirs = os.listdir(source)
     for d in dirs:
-        if ignore.ignoring(d):
+        # don't ignore .git file
+        if d == ".git" and not os.path.isfile(join(source, d)):
+            pack(join(source, d), join(target, d))
+            continue
+
+        if ignore and ignore.ignoring(d):
             continue
 
         if os.path.isfile(join(source, d)):
