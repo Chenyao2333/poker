@@ -1,5 +1,5 @@
 
-**It's in developing. Pull Request is welcome!**
+**It's in developing, the README is just the prototype and the function haven't been implemented. Pull Request is welcome!**
 
 # Poker
 
@@ -54,7 +54,7 @@ tasks:
         - py
         - cpp
         - tex
-        - go>
+        - go
         - conf
         - json
         - ipynb
