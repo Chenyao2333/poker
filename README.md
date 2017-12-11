@@ -19,13 +19,9 @@
 
 ~~~
 import task
-import upload
 
 t = task.load("./backup_task.yaml")
 p = t.execute() # p = /tmp/backup_tasks-2017-12-11_7:23:34
 tar_p = t.targz() # tar_p = /tmp/backup_tasks-2017-12-11_7:23:34.tar.gz
-
-
-upload.upload_to_oss(tar_p)
-#uplaod.upload_to_s3(tar_p)
+t.save() # save the tar.gz file to specified localtion in yaml, e.g. s3, oss, or disk
 ~~~

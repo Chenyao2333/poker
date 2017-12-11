@@ -1,3 +1,12 @@
+save_to:
+  oss:
+    entrypoint: http://oss-cn-hangzhou.aliyuncs.com
+    access_key: xxx # Should we save the key in other files?
+    secret_key: xxx
+    bucket: poker-buckup
+
+  disk: /opt/poker-backup
+
 tasks:
   home:
     directory: "/home/louch"
