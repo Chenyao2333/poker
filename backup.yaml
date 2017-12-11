@@ -1,0 +1,39 @@
+period: 3 days
+
+tasks:
+  home:
+    directory: "/home/louch"
+    match:
+      - suffix:
+        - py
+        - cpp
+        - tex
+        - go
+        - conf
+        - json
+        - ipynb
+        - html
+        - js
+        - css
+        - md
+        - srl
+        - pem
+      - name:
+        - id_rsa
+        - id_rsa.pub
+      - and:
+        - name: .git
+        - file_size: < 10m
+      - and:
+        - file_size: < 1m
+    
+    ignores:
+        - and:
+          - name: .git
+          - file_size: ">= 10m"
+        - name: "louchenyao@gmail.com"
+
+  etc:
+    directory: /etc
+    match:
+      - file_size: < 100k
