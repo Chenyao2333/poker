@@ -161,7 +161,7 @@ class AndRule(Rule):
     def __init__(self, args):
         super().__init__()
         self.rules = []
-        self.help = "AndRules' parameter shoud be list or tuple of rules."
+        self.help = "AndRule's parameter shoud be list or tuple of rules."
 
         if type(args) != tuple and type(args) != list:
             raise Exception(self.help + " But it's %s" % type(args))
@@ -179,22 +179,12 @@ class AndRule(Rule):
                 return False
         return True
 
-
-_RULE_PROCESSER = {
-    "name": NameRule,
-    "and": AndRule,
-    "suffix": SuffixRule,
-    "file_size": FileSizeRule,
-    "dir_size": DirSizeRule
-}
-
-
-class Rules(Rule):
+class OrRule(Rule):
     def __init__(self, args):
         super().__init__()
 
         self.rules = []
-        self.help = "Rules' parameter shoud be list or tuple of rules."
+        self.help = "OrRule's parameter shoud be list or tuple of rules."
 
         if type(args) != tuple and type(args) != list:
             raise Exception(self.help + " But it's %s" % type(args))
@@ -211,3 +201,13 @@ class Rules(Rule):
             if rule.match(name):
                 return True
         return False
+
+
+_RULE_PROCESSER = {
+    "name": NameRule,
+    "suffix": SuffixRule,
+    "file_size": FileSizeRule,
+    "dir_size": DirSizeRule,
+    "and": AndRule,
+    "or": OrRule
+}
