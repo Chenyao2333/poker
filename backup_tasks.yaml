@@ -10,7 +10,7 @@ save_to:
 tasks:
   home:
     directory: "/home/louch"
-    match:
+    matchs:
       - suffix:
         - py
         - cpp
