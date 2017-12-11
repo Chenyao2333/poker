@@ -30,6 +30,7 @@ class NameRule(Rule):
             raise Exception(self.help + " But it's %s!" % type(args))
 
     def match(self, name):
+        name = os.path.basename(name)
         return name in self.names
 
 
@@ -43,11 +44,11 @@ class SuffixRule(Rule):
         if type(args) == str:
             self.suffixes.append(args)
         elif type(args) == list or type(args) == tuple:
-            for name in args:
-                if type(name) != str:
+            for suff in args:
+                if type(suff) != str:
                     raise Exception(self.help + " But %s is %s!" %
-                                    (name, type(name)))
-                self.suffixes.append(name)
+                                    (suff, type(suff)))
+                self.suffixes.append(suff)
         else:
             raise Exception(self.help + " But it's %s!" % type(args))
 
@@ -55,8 +56,8 @@ class SuffixRule(Rule):
         for suff in self.suffixes:
             if name.endswith("." + suff):
                 return True
-            else:
-                return False
+        
+        return False
 
 
 def parse_size_limit(s):
