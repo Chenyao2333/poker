@@ -6,12 +6,11 @@ class Packer(object):
     def __init__(self, config_file):
         pass
     
-    def collect(self):
+    def collect(self, to = None):
         pass
 
-    def compress(self):
+    def compress(self, to_file = None):
         pass
     
     def upload(self):
         pass
-        
