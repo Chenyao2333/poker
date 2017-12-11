@@ -1,37 +1,89 @@
-## Procedures
 
-### client
- 1. creating directory /tmp/tmp_xxxx_poker
- 2. cpoy backup.yaml to there
- 3. for each task, create an directory for it
- 4. copy files to each directory
- 5. rename directorys to /tmp/poker-2017-12-7
- 6. tar.gz it 
- 7. upload it to oss?
+**It's in developing. Pull Request is welcome!**
 
+# Poker
 
-### server
- 1. An web interface to check the current files
- 2. auto delete the history files in OSS
+Rule-based collect files and backup tool!
 
+## Quick Start
 
-## Usage Draft
+### Case: Backup all the source code in cpp\python\go, and the .git directorys which size is less than 10m. Then save them to `/opt/backup/`.
 
+Just write the following into `task.yml`, and run `poker -f task.yml`!
+
+~~~yml
+save_to:
+  disk: /opt/poker
+
+tasks:
+  home:
+    directory: "/home/louch"
+    matchs:
+      - suffix:
+        - py
+        - cpp
+        - go
+      - and:
+        - name: .git
+        - dir_size: < 10m
+
+    ignores:
+        - name:
+          - "go1.9"
+          - "anaconda3"
 ~~~
-import poker
 
-packer = poker.Packer("./backup_task.yaml")
-p = packer.collect() # p = /tmp/backup_tasks-2017-12-11_7:23:34
-tar_p = packer.compress() # tar_p = /tmp/backup_tasks-2017-12-11_7:23:34.tar.gz
-packer.upload() # save the tar.gz file to specified localtion in yaml, e.g. s3, oss, or disk
-~~~
 
-~~~
-import task
-t = task.Task({"directory": ...})
-t.collect("/tmp/tmp_ae3x_poker/etc)
-~~~
+## A More Powerful Example
 
-## Discussions
+``` yml
+save_to:
+  s3:
+    entrypoint: http://oss-cn-hangzhou.aliyuncs.com
+    access_key: xxx
+    secret_key: xxx
+    bucket: poker-buckup
 
-Should we clean the packaged files after the Packer be dereferenced? Or we shold clean them explicitly?
+  disk: /opt/poker-backup
+
+tasks:
+  home:
+    directory: "/home/louch"
+    matchs:
+      - suffix:
+        - py
+        - cpp
+        - tex
+        - go>
+        - conf
+        - json
+        - ipynb
+        - html
+        - js
+        - css
+        - md
+        - srl
+        - pem
+      - name: .ssh
+      - file_size: < 1m
+      - and:
+        - name: .git
+        - dir_size: < 10m
+      - and:
+        - suffix: pdf
+        - file_size: < 10m
+    
+    ignores:
+        - and:
+          - name: .git
+          - file_size: ">= 10m"
+        - name:
+          - "louchenyao@gmail.com"
+          - "go1.9"
+          - "anaconda3"
+
+  etc:
+    directory: /etc
+    match:
+      - file_size: < 100k
+```
