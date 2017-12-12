@@ -11,6 +11,7 @@ class Task(object):
 
     def _search_matched_files(self):
         pass
+        return []
 
     def _copy(self, file):
         pass
