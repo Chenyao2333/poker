@@ -6,8 +6,8 @@ import ruler
 class Task(object):
     def __init__(self, args):
         self.dir = args["directory"]
-        self.match = ruler.OrRule(args["match"])
-        self.ignore = ruler.OrRule(args["ignore"])
+        self.match = ruler.OrRule(args.get("match", []))
+        self.ignore = ruler.OrRule(args.get("ignore", []))
 
     def _search_matched_files(self):
         pass
