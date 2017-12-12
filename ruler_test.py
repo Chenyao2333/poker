@@ -52,14 +52,54 @@ class TestFileSizeRule(unittest.TestCase):
         self.f1_size = 4096
         self.f2 = self.dir_for_test + "/" + "file2"
         self.f2_size = 1024 * 1024 + 512 * 1024  # 1.5m
+        self.f3 = self.dir_for_test + "/" + "file3"
+        self.f3_size = 1024 * 1024 * 2 # 2m
 
-        os.mkdir(self.dir_for_test)
+        os.makedirs(self.dir_for_test, exist_ok=True)
+        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" % (self.f1_size, self.f1))
+        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" % (self.f2_size, self.f2))
+        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" % (self.f3_size, self.f3))
 
     def tearDown(self):
         os.system("rm -rf %s" % self.dir_for_test)
 
     def test_less(self):
-        pass
+        r = ruler.FileSizeRule("< 1m")
+        self.assertTrue(r.match(self.f1))
+        self.assertFalse(r.match(self.f2))
+
+        r = ruler.FileSizeRule("<1024k")
+        self.assertTrue(r.match(self.f1))
+        self.assertFalse(r.match(self.f2))
+
+        r = ruler.FileSizeRule("< 0.0009765625g")
+        self.assertTrue(r.match(self.f1))
+        self.assertFalse(r.match(self.f2))
+
+    def test_great(self):
+        r = ruler.FileSizeRule("> 1m")
+        self.assertFalse(r.match(self.f1))
+        self.assertTrue(r.match(self.f2))
+
+        r = ruler.FileSizeRule("> 1024k")
+        self.assertFalse(r.match(self.f1))
+        self.assertTrue(r.match(self.f2))
+
+        r = ruler.FileSizeRule(">0.0009765625g")
+        self.assertFalse(r.match(self.f1))
+        self.assertTrue(r.match(self.f2))
+        
+    def test_le(self):
+        r = ruler.FileSizeRule("<= 1.5m")
+        self.assertTrue(r.match(self.f1))
+        self.assertTrue(r.match(self.f2))
+        self.assertFalse(r.match(self.f3))
+
+    def test_ge(self):
+        r = ruler.FileSizeRule(">= 1.5m")
+        self.assertFalse(r.match(self.f1))
+        self.assertTrue(r.match(self.f2))
+        self.assertTrue(r.match(self.f3))
 
 
 class TestDirSizeRule(unittest.TestCase):

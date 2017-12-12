@@ -65,12 +65,22 @@ def parse_size_limit(s):
     size = ""
 
     s = s.strip()
-    op = s[0]
-    size = float(s[1:-1].strip())
-    unit = s[-1]
 
-    assert(op in ["<", ">", ">=", "<="])
-    assert(unit in ["k", "m", "g"])
+    OPS = [">", "<", ">=", "<="]
+    UNITS = ["k", "m", "g"]
+    op = ""
+    unit = ""
+    for x in OPS:
+        if s.startswith(x) and len(x) > len(op):
+            op = x
+    for x in UNITS:
+        if s.endswith(x) and len(x) > len(unit):
+            unit = x
+
+    assert(op in OPS)
+    assert(unit in UNITS)
+    
+    size = float(s[len(op):-len(unit)].strip())
 
     if unit == "k":
         unit = 1024
@@ -168,11 +178,14 @@ class AndRule(Rule):
             raise Exception(self.help + " But it's %s" % type(args))
 
         for rule in args:
-            if rule in _RULE_PROCESSER:
+            if type(rule) == dict:
+                proc = _RULE_PROCESSER["or"]
+            elif type(rule) == str and rule in _RULE_PROCESSER:
                 proc = _RULE_PROCESSER[rule]
-                self.rules.append(proc(rule))
             else:
                 raise Exception("Can't recognize rule %s" % rule)
+            
+            self.rules.append(proc(rule))
 
     def match(self, name):
         for rule in self.rules:
@@ -190,12 +203,16 @@ class OrRule(Rule):
         if type(args) != tuple and type(args) != list:
             raise Exception(self.help + " But it's %s" % type(args))
 
+
         for rule in args:
-            if rule in _RULE_PROCESSER:
+            if type(rule) == dict:
+                proc = _RULE_PROCESSER["or"]
+            elif type(rule) == str and rule in _RULE_PROCESSER:
                 proc = _RULE_PROCESSER[rule]
-                self.rules.append(proc(rule))
             else:
                 raise Exception("Can't recognize rule %s" % rule)
+            
+            self.rules.append(proc(rule))
 
     def match(self, name):
         for rule in self.rules:
