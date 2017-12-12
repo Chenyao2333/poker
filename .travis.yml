@@ -2,10 +2,10 @@ env:
   global:
     - CC_TEST_REPORTER_ID=cf4400207d425277038e630c8d5c48dd0c6deb568612ff890229a913ff92a786
 
-language: python
+language: python3
 
 install:
-  - pip3 install coverage
+  - pip install coverage
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -13,7 +13,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - python3 test.py
+  - python test.py
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
