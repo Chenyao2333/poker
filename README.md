@@ -5,6 +5,12 @@
 
 Rule-based collect files and backup tool!
 
+[![Build Status](https://travis-ci.org/Chenyao2333/poker.svg?branch=master)](https://travis-ci.org/Chenyao2333/poker)
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/75706996abd90a1427d0/maintainability)](https://codeclimate.com/github/Chenyao2333/poker/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/75706996abd90a1427d0/test_coverage)](https://codeclimate.com/github/Chenyao2333/poker/test_coverage)
+
 ## Quick Start
 
 ### Case: Backup all the source code in cpp\python\go, and the .git directorys which size is less than 10m. Then save them to `/opt/backup/`.
