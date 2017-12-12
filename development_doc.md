@@ -80,3 +80,7 @@ t.collect("/tmp/tmp_ae3x_poker/etc)
   ~~~
 
   The decision is, **if the `dict` in the `list` of AndRule or OrRule**, then this dict is an OrRule.
+
+## Coverage 
+
+The codeclimate is good, but the it only supports the coverage.py with version >=4.0 <4.4. Why the pip won't solve it automatically? I will submit an issue.
