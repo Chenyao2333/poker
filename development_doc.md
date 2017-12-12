@@ -84,3 +84,7 @@ t.collect("/tmp/tmp_ae3x_poker/etc)
 ## Coverage 
 
 The codeclimate is good, but the it only supports the coverage.py with version >=4.0 <4.4. Why the pip won't solve it automatically? I will submit an issue.
+
+Ok, I'm so frustrating with Codeclimate now. The readme badage load failed! I don't want to touch it until the project is done. Very frustrating!
+
+I'm consdier using coverall to repalce it!
