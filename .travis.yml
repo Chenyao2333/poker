@@ -1,0 +1,5 @@
+language: python
+
+script:
+  - python3 ruler_test.py
+  - python3 task_test.py
