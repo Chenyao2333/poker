@@ -60,7 +60,13 @@ t.collect("/tmp/tmp_ae3x_poker/etc)
       name: abc
       file_size: < 10m
   ~~~
-  
+
+  Expression: (name = abc or file_zie < 10m>) and True
+  ~~~yaml
+  - and:
+      - name: abc
+        file_size: < 10m
+  ~~~ 
   
   Expression: (name = .git or suffix = .svn) and (name = abc or name = def) and (dir_size < 10m)
   ~~~yaml
@@ -72,3 +78,5 @@ t.collect("/tmp/tmp_ae3x_poker/etc)
       - name: .svn
     - dir_size: < 10m
   ~~~
+
+  The decision is, **if the `dict` in the `list` of AndRule or OrRule**, then this dict is an OrRule.

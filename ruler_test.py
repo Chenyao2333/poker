@@ -4,6 +4,7 @@ import unittest
 import os
 
 import ruler
+import utils
 
 
 class TestNameRule(unittest.TestCase):
@@ -103,16 +104,128 @@ class TestFileSizeRule(unittest.TestCase):
 
 
 class TestDirSizeRule(unittest.TestCase):
-    pass
+    def setUp(self):
+        self.dir = "/tmp/tttest"
+        self.f1 = self.dir + "/f1"
+        self.f2 = self.dir + "/f2"
+        self.total_size = 0
+        self.f1_size = 0
+        self.f2_size = 0
+
+        os.makedirs(self.dir, exist_ok=False)
+        os.makedirs(self.f1, exist_ok=False)
+        os.makedirs(self.f2, exist_ok=False)
+        
+        self.total_size += 2048
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (2048, self.dir + "/file1"))
+        self.total_size += 4096
+        self.f1_size  += 4096
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (4096, self.f1 + "/file1"))
+        self.total_size += 8192
+        self.f1_size += 8192
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (8192, self.f1 + "/file2"))
+        self.total_size += 8888
+        self.f2_size += 8888
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (8888, self.f2 + "/file1"))
+
+    def tearDown(self):
+        os.system("rm -rf %s" % self.dir)
+    
+    def test_size_calculator(self):
+        # total = 23334 = 22.6796875k
+        r1 = ruler.DirSizeRule("<= 22.6796875k")
+        r2 = ruler.DirSizeRule("<= 22.6796874k")
+
+        self.assertTrue(r1.match(self.dir))
+        self.assertFalse(r2.match(self.dir))
+
+    def test_less(self):
+        r1 = ruler.DirSizeRule("< 8888b")
+        r2 = ruler.DirSizeRule("< 8889b")
+
+        self.assertFalse(r1.match(self.f2))
+        self.assertTrue(r2.match(self.f2))
+
+    def test_great(self):
+        # f1 = 12288
+        r1 = ruler.DirSizeRule("> 12288b")
+        r2 = ruler.DirSizeRule("> 12287b")
+        r3 = ruler.DirSizeRule(">= 12288b")
+        r4 = ruler.DirSizeRule(">= 12289b")
+
+        self.assertFalse(r1.match(self.f1))
+        self.assertTrue(r2.match(self.f1))
+        self.assertTrue(r3.match(self.f1))
+        self.assertFalse(r4.match(self.f1))
 
 
 class TestAndRule(unittest.TestCase):
-    pass
+    def setUp(self):
+        utils.create_file_with_zeros("/tmp/nihao", 2048)
+
+    def tearDown(self):
+        os.system("rm -rf /tmp/nihao")
+
+    def test_normal(self):
+        r1 = ruler.AndRule([
+            {
+                "name": "nihao"
+            },
+            {
+                "file_size": "> 1024b"
+            }
+        ])
+
+        r2 = ruler.AndRule([
+            {
+                "name": "nihao"
+            },
+            {
+                "file_size": "<= 2047b"
+            }
+        ])
+
+        self.assertTrue(r1.match("/tmp/nihao"))
+        self.assertFalse(r2.match("/tmp/nihao"))
+
+    def test_exception(self):
+        with self.assertRaises(Exception):
+            ruler.AndRule({
+                "name": "nihao",
+                "file_size": "> 1024b"
+            })
 
 
 class TestOrRule(unittest.TestCase):
-    pass
+    def setUp(self):
+        utils.create_file_with_zeros("/tmp/nihao", 2048)
 
+    def tearDown(self):
+        os.system("rm -rf /tmp/nihao")
+
+    def test(self):
+        r1 = ruler.OrRule([
+            {
+                "name": "bye"
+            },
+            {
+                "file_size": "> 1024b"
+            }
+        ])
+
+        r2 = ruler.OrRule({
+            "name": "bye",
+            "file_size": "> 1024b"
+        })
+
+        r3 = ruler.OrRule({
+            "name": "bye",
+            "file_size": "< 1024b"
+        })
+
+        self.assertTrue(r1.match("/tmp/nihao"))
+        self.assertTrue(r2.match("/tmp/nihao"))
+        self.assertFalse(r3.match("/tmp/nihao"))
 
 if __name__ == '__main__':
     unittest.main()

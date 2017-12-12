@@ -67,7 +67,7 @@ def parse_size_limit(s):
     s = s.strip()
 
     OPS = [">", "<", ">=", "<="]
-    UNITS = ["k", "m", "g"]
+    UNITS = ["b", "k", "m", "g"]
     op = ""
     unit = ""
     for x in OPS:
@@ -82,7 +82,9 @@ def parse_size_limit(s):
     
     size = float(s[len(op):-len(unit)].strip())
 
-    if unit == "k":
+    if unit == "b":
+        unit = 1
+    elif unit == "k":
         unit = 1024
     elif unit == "m":
         unit = 1024 * 1024
@@ -172,24 +174,24 @@ class AndRule(Rule):
     def __init__(self, args):
         super().__init__()
         self.rules = []
-        self.help = "AndRule's parameter shoud be list or tuple of rules."
+        self.help = "AndRule's parameter shoud be list of rules."
 
-        if type(args) != tuple and type(args) != list:
+        if type(args) != list:
             raise Exception(self.help + " But it's %s" % type(args))
 
         for rule in args:
             if type(rule) == dict:
-                proc = _RULE_PROCESSER["or"]
-            elif type(rule) == str and rule in _RULE_PROCESSER:
-                proc = _RULE_PROCESSER[rule]
+                self.rules.append(OrRule(rule))
+            elif type(rule) == str:
+                raise Exception("Currenctly, there are no filters with no parameters, so what do you mean for %s" % rule)
             else:
-                raise Exception("Can't recognize rule %s" % rule)
-            
-            self.rules.append(proc(rule))
+                raise Exception(self.help)
+
 
     def match(self, name):
         for rule in self.rules:
             if not rule.match(name):
+                #print("Don't match %s" % type(rule))
                 return False
         return True
 
@@ -198,26 +200,34 @@ class OrRule(Rule):
         super().__init__()
 
         self.rules = []
-        self.help = "OrRule's parameter shoud be list or tuple of rules."
+        self.help = "OrRule's parameter shoud be list of rules, or dict of rules."
 
-        if type(args) != tuple and type(args) != list:
+        if type(args) != list and type(args) != dict:
             raise Exception(self.help + " But it's %s" % type(args))
 
 
-        for rule in args:
-            if type(rule) == dict:
-                proc = _RULE_PROCESSER["or"]
-            elif type(rule) == str and rule in _RULE_PROCESSER:
-                proc = _RULE_PROCESSER[rule]
-            else:
-                raise Exception("Can't recognize rule %s" % rule)
-            
-            self.rules.append(proc(rule))
+        if type(args) == list:
+            for rule in args:
+                if type(rule) == dict:
+                    self.rules.append(OrRule(rule))
+                elif type(rule) == str:
+                    raise Exception("Currenctly, there are no filters with no parameters, so what do you mean for %s" % rule)
+                else:
+                    raise Exception(self.help)
+        elif type(args) == dict:
+            for rule in args:
+                if type(rule) == str and rule in _RULE_PROCESSER:
+                    proc = _RULE_PROCESSER[rule]
+                    self.rules.append(proc(args[rule]))
+                else:
+                    raise Exception("Can't recognize rule %s" % rule)
+
 
     def match(self, name):
         for rule in self.rules:
             if rule.match(name):
                 return True
+            # print("Don't match %s" % type(rule))
         return False
 
 
