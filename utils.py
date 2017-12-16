@@ -43,6 +43,8 @@ def create_dirs_from_struct_tree(struct, root_dir):
 
 def compare_struct_tree_and_dirs(struct, root_dir):
     if type(struct) == list:
+        names_in_struct = []
+
         for x in struct:
             if type(x) == str:
                 size, name = _parse_size_name(x)
@@ -50,11 +52,19 @@ def compare_struct_tree_and_dirs(struct, root_dir):
                 if not os.path.isfile(path):
                     print("not find", path)
                     return False
-                if os.path.getsize(path) != size:
+                if size > 0 and os.path.getsize(path) != size:
                     return False
+                names_in_struct.append(name)
             elif type(x) == dict:
+                for name in x:
+                    names_in_struct.append(name)
                 if not compare_struct_tree_and_dirs(x, root_dir):
                     return False
+        
+        for name in os.listdir(root_dir):
+            if name not in names_in_struct:
+                print(name, "shoudn't in", root_dir)
+                return False
     
     elif type(struct) == dict:
         for dir_name in struct:

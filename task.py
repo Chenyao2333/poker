@@ -32,13 +32,16 @@ class Task(object):
                 # TODO: How to processing link need to be discussed
                 continue
 
-            if self.match.match(new_path):
+            match = self.match.match(new_path)
+            ignore = self.ignore.match(new_path)
+            if match and not ignore:
                 ret.append(new_related_path)
-            elif self.ignore.match(new_path):
-                pass
+            elif ignore:
+                print("ignore ", new_path)
+                continue
             elif os.path.isdir(new_path):
                 ret += self._dfs_search(new_path, new_related_path)
-                
+
         return ret
 
     def _search_matched_files(self):
@@ -62,7 +65,7 @@ class Task(object):
             self._copy(new_src_path, new_dst_path)
 
     def _copy(self, src_path, dst_path):
-        print(src_path)
+        # print(src_path)
         if os.path.isfile(src_path):
             self._copy_file(src_path, dst_path)
         elif os.path.isdir(src_path):
