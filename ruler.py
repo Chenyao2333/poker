@@ -56,32 +56,23 @@ class SuffixRule(Rule):
         for suff in self.suffixes:
             if name.endswith("." + suff):
                 return True
-        
+
         return False
 
 
-def parse_size_limit(s):
-    op = ""
-    size = ""
-
+def parse_size(s):
     s = s.strip()
 
-    OPS = [">", "<", ">=", "<="]
+    # parse_unit
     UNITS = ["b", "k", "m", "g"]
-    op = ""
     unit = ""
-    for x in OPS:
-        if s.startswith(x) and len(x) > len(op):
-            op = x
     for x in UNITS:
         if s.endswith(x) and len(x) > len(unit):
             unit = x
-
-    assert(op in OPS)
     assert(unit in UNITS)
-    
-    size = float(s[len(op):-len(unit)].strip())
 
+    # convert to bytes
+    size = float(s[:-len(unit)].strip())
     if unit == "b":
         unit = 1
     elif unit == "k":
@@ -90,9 +81,24 @@ def parse_size_limit(s):
         unit = 1024 * 1024
     elif unit == "g":
         unit = 1024 * 1024 * 1024
-
     size = size * unit
     size = int(size)
+    
+    return size
+
+def parse_size_limit(s):
+    s = s.strip()
+
+    # parse operator
+    OPS = [">", "<", ">=", "<="]
+    op = ""
+    for x in OPS:
+        if s.startswith(x) and len(x) > len(op):
+            op = x
+    assert(op in OPS)
+
+    # parse size
+    size = parse_size(s[len(op):])
 
     return (op, size)
 
@@ -183,10 +189,10 @@ class AndRule(Rule):
             if type(rule) == dict:
                 self.rules.append(OrRule(rule))
             elif type(rule) == str:
-                raise Exception("Currenctly, there are no filters with no parameters, so what do you mean for %s" % rule)
+                raise Exception(
+                    "Currenctly, there are no filters with no parameters, so what do you mean for %s" % rule)
             else:
                 raise Exception(self.help)
-
 
     def match(self, name):
         for rule in self.rules:
@@ -194,6 +200,7 @@ class AndRule(Rule):
                 #print("Don't match %s" % type(rule))
                 return False
         return True
+
 
 class OrRule(Rule):
     def __init__(self, args):
@@ -205,13 +212,13 @@ class OrRule(Rule):
         if type(args) != list and type(args) != dict:
             raise Exception(self.help + " But it's %s" % type(args))
 
-
         if type(args) == list:
             for rule in args:
                 if type(rule) == dict:
                     self.rules.append(OrRule(rule))
                 elif type(rule) == str:
-                    raise Exception("Currenctly, there are no filters with no parameters, so what do you mean for %s" % rule)
+                    raise Exception(
+                        "Currenctly, there are no filters with no parameters, so what do you mean for %s" % rule)
                 else:
                     raise Exception(self.help)
         elif type(args) == dict:
@@ -222,7 +229,6 @@ class OrRule(Rule):
                 else:
                     raise Exception("Can't recognize rule %s" % rule)
 
-
     def match(self, name):
         for rule in self.rules:
             if rule.match(name):
@@ -230,6 +236,21 @@ class OrRule(Rule):
             # print("Don't match %s" % type(rule))
         return False
 
+
+class AlwaysTrueRule(Rule):
+    def __init__(self):
+        pass
+
+    def match(self, name):
+        return True
+
+
+class AlwaysFalseRule(Rule):
+    def __init__(self):
+        pass
+
+    def match(self, name):
+        return False
 
 _RULE_PROCESSER = {
     "name": NameRule,

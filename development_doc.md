@@ -87,4 +87,9 @@ The codeclimate is good, but the it only supports the coverage.py with version >
 
 Ok, I'm so frustrating with Codeclimate now. The readme badage load failed! I don't want to touch it until the project is done. Very frustrating!
 
-I'm consdier using coverall to repalce it!
+I'm consdier using coverall to repalce it! Codecov seems also easy enough!
+
+
+## Log
+
+maybe I need detail logs for debug, print is not good

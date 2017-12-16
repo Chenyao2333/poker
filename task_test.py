@@ -4,6 +4,7 @@ import unittest
 import os
 
 import task
+import ruler
 import utils
 
 
@@ -11,11 +12,12 @@ class TestNameRule(unittest.TestCase):
     def setUp(self):
         self.source = "/tmp/testtask/src"
         self.target = "/tmp/testtask/dst"
+        self.task_name = "dst"
 
         self.src_struct = [
             "b.txt",
             "ortest",
-            "test.or",
+            "a.test.or",
             "test_or",
             {
                 "document": [
@@ -34,7 +36,7 @@ class TestNameRule(unittest.TestCase):
                                     "3m|b"
                                 ]
                             },
-                            "2m|pointer"
+                            "2m|pointer",
                             "2m|nameneeded"
                         ]
                     },
@@ -88,7 +90,7 @@ class TestNameRule(unittest.TestCase):
         self.dst_struct = [
             "b.txt",
             "ortest",
-            "test.or",
+            "a.test.or",
             {
                 "document": [
                     "c.txt",
@@ -112,17 +114,21 @@ class TestNameRule(unittest.TestCase):
         os.system("rm -rf %s" % self.source)
         os.system("rm -rf %s" % self.target)
         os.makedirs(self.source, exist_ok=True)
-        os.makedirs(self.target, exist_ok=True)
-        utils.create_folders_struct_from_tree(self.src_struct)
+        utils.create_dirs_from_struct_tree(self.src_struct, self.source)
 
     def tearDown(self):
         os.system("rm -rf %s" % self.source)
         os.system("rm -rf %s" % self.target)
 
     def test(self):
-        t = task.Task(self.task)
-        t.collect(self.target)
-        # TODO self.assertTrue(uitls.compare_folders_and_tree(self.dst_struct, self.target))
+        t = task.Task(self.task_name, self.task)
+        self.assertTrue(type(t.match) == ruler.OrRule)
+        self.assertTrue(t.match.match("/tmp/b.txt"))
+        self.assertTrue(t.match.match("b.txt"))
+        self.assertEqual(t.collect(os.path.dirname(self.target)), [])
+
+        self.assertTrue(utils.compare_struct_tree_and_dirs(
+            self.dst_struct, self.target))
 
 
 if __name__ == '__main__':

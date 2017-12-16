@@ -54,12 +54,15 @@ class TestFileSizeRule(unittest.TestCase):
         self.f2 = self.dir_for_test + "/" + "file2"
         self.f2_size = 1024 * 1024 + 512 * 1024  # 1.5m
         self.f3 = self.dir_for_test + "/" + "file3"
-        self.f3_size = 1024 * 1024 * 2 # 2m
+        self.f3_size = 1024 * 1024 * 2  # 2m
 
         os.makedirs(self.dir_for_test, exist_ok=True)
-        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" % (self.f1_size, self.f1))
-        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" % (self.f2_size, self.f2))
-        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" % (self.f3_size, self.f3))
+        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (self.f1_size, self.f1))
+        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (self.f2_size, self.f2))
+        os.system("dd bs=%d count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (self.f3_size, self.f3))
 
     def tearDown(self):
         os.system("rm -rf %s" % self.dir_for_test)
@@ -89,7 +92,7 @@ class TestFileSizeRule(unittest.TestCase):
         r = ruler.FileSizeRule(">0.0009765625g")
         self.assertFalse(r.match(self.f1))
         self.assertTrue(r.match(self.f2))
-        
+
     def test_le(self):
         r = ruler.FileSizeRule("<= 1.5m")
         self.assertTrue(r.match(self.f1))
@@ -115,22 +118,26 @@ class TestDirSizeRule(unittest.TestCase):
         os.makedirs(self.dir, exist_ok=False)
         os.makedirs(self.f1, exist_ok=False)
         os.makedirs(self.f2, exist_ok=False)
-        
+
         self.total_size += 2048
-        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (2048, self.dir + "/file1"))
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (2048, self.dir + "/file1"))
         self.total_size += 4096
-        self.f1_size  += 4096
-        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (4096, self.f1 + "/file1"))
+        self.f1_size += 4096
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (4096, self.f1 + "/file1"))
         self.total_size += 8192
         self.f1_size += 8192
-        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (8192, self.f1 + "/file2"))
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (8192, self.f1 + "/file2"))
         self.total_size += 8888
         self.f2_size += 8888
-        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" % (8888, self.f2 + "/file1"))
+        os.system("dd bs=%s count=1 if=/dev/zero of=%s 2> /dev/null" %
+                  (8888, self.f2 + "/file1"))
 
     def tearDown(self):
         os.system("rm -rf %s" % self.dir)
-    
+
     def test_size_calculator(self):
         # total = 23334 = 22.6796875k
         r1 = ruler.DirSizeRule("<= 22.6796875k")
@@ -226,6 +233,16 @@ class TestOrRule(unittest.TestCase):
         self.assertTrue(r1.match("/tmp/nihao"))
         self.assertTrue(r2.match("/tmp/nihao"))
         self.assertFalse(r3.match("/tmp/nihao"))
+
+
+class TestAlwaysTrueAndFalse(unittest.TestCase):
+    def test(self):
+        t = ruler.AlwaysTrueRule()
+        self.assertTrue(t.match("23"))
+
+        f = ruler.AlwaysFalseRule()
+        self.assertFalse(f.match("23"))
+
 
 if __name__ == '__main__':
     unittest.main()
