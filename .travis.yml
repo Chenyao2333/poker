@@ -11,6 +11,9 @@ install:
   - pip install coverage==4.3 pytest-cov
   - pip install codeclimate-test-reporter
 
+before_script:
+  - pip install -r requirements.txt
+
 script:
   - pytest --cov=.
 

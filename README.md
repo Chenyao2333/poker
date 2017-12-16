@@ -1,5 +1,5 @@
 
-**It's in developing, the README is just the prototype and the function haven't been implemented. Pull Request is welcome!**
+**It's in developing, Pull Request is welcome!**
 
 # Poker
 
@@ -9,36 +9,36 @@ Rule-based collect files and backup tool!
 
 ## Quick Start
 
-### Case: Backup all the source code in cpp\python\go, and the .git directorys which size is less than 10m. Then save them to `/opt/backup/`.
+### Case: Backup all the source code in cpp\python\go.
 
-Just write the following into `task.yml`, and run `poker -f task.yml`!
+Writing the following into `task.yml`, and run `poker -f task.yml`!
 
 ~~~yml
-save_to:
-  disk: /opt/poker
-
 tasks:
-  home:
-    directory: "/home/louch"
-    matchs:
-      - suffix:
-        - py
-        - cpp
-        - go
+  c_and_cpp:
+    directory: /home
+    match:
       - and:
-        - name: .git
-        - dir_size: < 10m
+        - file_size: < 10k
+        - suffix:
+          - "cpp"
+          - "c"
+          - ".h"
+          - "py"
+          - "go"
+    ignore:
+      - name:
+        - .steam
+        - "go1.9"
+        - louchenyao@gmail.com
 
-    ignores:
-        - name:
-          - "go1.9"
-          - "anaconda3"
 ~~~
 
 
 ## A More Powerful Example
 
 ``` yml
+# not implemented save_to
 save_to:
   s3:
     entrypoint: http://oss-cn-hangzhou.aliyuncs.com
@@ -51,7 +51,7 @@ save_to:
 tasks:
   home:
     directory: "/home/louch"
-    matchs:
+    match:
       - suffix:
         - py
         - cpp
@@ -75,7 +75,7 @@ tasks:
         - suffix: pdf
         - file_size: < 10m
     
-    ignores:
+    ignore:
         - and:
           - name: .git
           - file_size: ">= 10m"
