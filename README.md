@@ -18,14 +18,12 @@ tasks:
   c_and_cpp:
     directory: /home
     match:
-      - and:
-        - file_size: < 10k
-        - suffix:
-          - "cpp"
-          - "c"
-          - ".h"
-          - "py"
-          - "go"
+      - suffix:
+        - "cpp"
+        - "c"
+        - ".h"
+        - "py"
+        - "go"
     ignore:
       - name:
         - .steam
