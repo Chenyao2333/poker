@@ -1,0 +1,14 @@
+tasks:
+  c_and_cpp:
+    directory: /home/louch
+    match:
+      - and:
+        - file_size: < 10k
+        - suffix:
+          - "cpp"
+          - "c"
+    ignore:
+      - name:
+        - .steam
+        - "go1.9"
+        - louchenyao@gmail.com

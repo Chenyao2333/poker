@@ -1,0 +1,50 @@
+# not implemented
+save_to:
+  oss:
+    entrypoint: http://oss-cn-hangzhou.aliyuncs.com
+    access_key: xxx # Should we save the key in other files?
+    secret_key: xxx
+    bucket: poker-buckup
+
+  disk: /opt/poker-backup
+
+tasks:
+  home:
+    directory: "/home/louch"
+    match:
+      - suffix:
+        - py
+        - cpp
+        - tex
+        - go
+        - conf
+        - json
+        - ipynb
+        - html
+        - js
+        - css
+        - md
+        - srl
+        - pem
+      - name: .ssh
+      - file_size: < 1m
+      - and:
+        - name: .git
+        - dir_size: < 10m
+      - and:
+        - suffix: pdf
+        - file_size: < 10m
+    
+    ignore:
+        - and:
+          - name: .git
+          - file_size: ">= 10m"
+        - name:
+          - "louchenyao@gmail.com"
+          - "go1.9"
+          - "anaconda3"
+
+  etc:
+    directory: /etc
+    match:
+      - file_size: < 100k
