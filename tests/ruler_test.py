@@ -3,8 +3,8 @@
 import unittest
 import os
 
-import ruler
-import utils
+import poker.ruler as ruler
+import poker.utils as utils
 
 
 class TestNameRule(unittest.TestCase):

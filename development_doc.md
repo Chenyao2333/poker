@@ -93,3 +93,8 @@ I'm consdier using coverall to repalce it! Codecov seems also easy enough!
 ## Log
 
 maybe I need detail logs for debug, print is not good
+
+
+## Issues
+
+The compressed files root is /, not /tmp/poker-files 

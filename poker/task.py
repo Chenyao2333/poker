@@ -3,7 +3,7 @@
 import os
 import shutil
 
-import ruler
+import poker.ruler as ruler
 
 
 class Task(object):

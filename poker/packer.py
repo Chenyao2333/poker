@@ -4,7 +4,7 @@ import yaml
 import datetime
 import os
 
-from task import Task
+from poker.task import Task
 
 
 class Packer(object):
@@ -33,8 +33,12 @@ class Packer(object):
         if to_file == None:
             to_file = os.path.basename(self.collection_path) + ".tar.gz"
             to_file = os.path.join("/tmp", to_file)
+        if to_file[0] != "/":
+            to_file = os.path.join(os.getcwd(), to_file)
 
-        os.system("tar cvfz %s %s 1> /dev/null" % (to_file, self.collection_path))
+        dir = os.path.dirname(self.collection_path)
+        name = os.path.basename(self.collection_path)
+        os.system("cd %s; tar cvfz %s %s 1> /dev/null" % (dir, to_file, name))
         return to_file
 
     def upload(self):

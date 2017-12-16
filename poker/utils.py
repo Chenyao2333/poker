@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 import os
-import ruler
+import poker.ruler as ruler
 
 
 def create_file_with_zeros(p, size=0):

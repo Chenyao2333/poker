@@ -3,9 +3,9 @@
 import unittest
 import os
 
-import task
-import ruler
-import utils
+import poker.task as task
+import poker.ruler as ruler
+import poker.utils as utils
 
 
 class TestNameRule(unittest.TestCase):

@@ -3,8 +3,8 @@
 import unittest
 import os
 
-import utils
-import packer
+import poker.utils as utils
+import poker.packer as packer
 
 class TestPacker(unittest.TestCase):
     def setUp(self):

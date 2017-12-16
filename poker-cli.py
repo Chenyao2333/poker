@@ -2,7 +2,7 @@
 
 import argparse
 
-from packer import Packer
+from poker.packer import Packer
 
 def main(tasks_file, compressed_to):
     p = Packer(tasks_file)
