@@ -34,7 +34,7 @@ class Packer(object):
             to_file = os.path.basename(self.collection_path) + ".tar.gz"
             to_file = os.path.join("/tmp", to_file)
 
-        os.system("tar cvfz %s %s" % (to_file, self.collection_path))
+        os.system("tar cvfz %s %s 1> /dev/null" % (to_file, self.collection_path))
         return to_file
 
     def upload(self):

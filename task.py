@@ -37,10 +37,13 @@ class Task(object):
             if match and not ignore:
                 ret.append(new_related_path)
             elif ignore:
-                print("ignore ", new_path)
+                #print("ignore ", new_path)
                 continue
             elif os.path.isdir(new_path):
-                ret += self._dfs_search(new_path, new_related_path)
+                try:
+                    ret += self._dfs_search(new_path, new_related_path)
+                except Exception as e:
+                    print("failed in searching", new_path)
 
         return ret
 
@@ -81,7 +84,7 @@ class Task(object):
         os.mkdir(dst_root)
 
         files = self._search_matched_files()
-        print(files)
+        #print(files)
         failed = []
         for f in files:
             try:
