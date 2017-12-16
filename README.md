@@ -3,11 +3,17 @@
 
 # Poker
 
-Rule-based collect files and backup tool!
+Rule-based collecting files and backup tool!
 
 [![Build Status](https://travis-ci.org/Chenyao2333/poker.svg?branch=master)](https://travis-ci.org/Chenyao2333/poker)
 
 ## Quick Start
+
+Using `pip` to install
+
+~~~bash
+pip install poker-tool
+~~~
 
 ### Case: Backup all the source code in cpp\python\go.
 
