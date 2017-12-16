@@ -25,11 +25,11 @@ tasks:
     directory: /home
     match:
       - suffix:
-        - "cpp"
-        - "c"
-        - ".h"
-        - "py"
-        - "go"
+        - cpp
+        - c
+        - h
+        - py
+        - go
     ignore:
       - name:
         - .steam
