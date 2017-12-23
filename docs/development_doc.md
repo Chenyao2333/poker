@@ -1,19 +1,27 @@
+# poker-cli procedures
+ 1. Creating directory /tmp/tmp_xxxx_poker, we called it `poker dir`.
+ 2. Cpoy backup.yaml to `poker dir`
+ 3. For each task, create a directory in `poker dir` for it. We call the created dir as `task dir`
+ 4. Collect the files matched the rule to coresponding `task dir`
+ 5. Rename the `poker dir` to /tmp/poker-2017-12-7
+ 6. tar.gz `poker dir` to poker-2017-12.tar.gz, or the specified name
+ 7. Uploaded it to S3
 
-## Procedures
+Compressed file structure:
 
-### client
- 1. creating directory /tmp/tmp_xxxx_poker
- 2. cpoy backup.yaml to there
- 3. for each task, create an directory for it
- 4. copy files to each directory
- 5. rename directorys to /tmp/poker-2017-12-7
- 6. tar.gz it 
- 7. upload it to oss?
+~~~
+specified_name.tar.gz
+  poker-2017-12
+    tasks.yml
+    home
+      [files matched the `home` task]
+    etc
+      [files matched the `etc` task]
+~~~
 
+# Preview Server
 
-### server
- 1. An web interface to check the current files
- 2. auto delete the history files in OSS
+We can implement a preview server to brower the files.
 
 
 ## Usage Draft

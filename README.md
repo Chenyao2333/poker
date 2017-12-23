@@ -17,7 +17,7 @@ pip install poker-tool
 
 ### Case: Backup all the source code in cpp\python\go.
 
-Writing the following into `task.yml`, and run `poker -f task.yml`!
+Writing the following into `task.yml`, and run `poker-cli -f task.yml`!
 
 ~~~yml
 tasks:
@@ -42,15 +42,13 @@ tasks:
 ## A More Powerful Example
 
 ``` yml
-# not implemented save_to
+# save_to is not yet implemented
 save_to:
   s3:
-    entrypoint: http://oss-cn-hangzhou.aliyuncs.com
-    access_key: xxx
-    secret_key: xxx
+    entrypoint: https://entrypoint.com
+    access_key: AccessKey
+    secret_key: SecretKey
     bucket: poker-buckup
-
-  disk: /opt/poker-backup
 
 tasks:
   home:
