@@ -43,6 +43,8 @@ t.collect("/tmp/tmp_ae3x_poker/etc)
 
 ## Discussions
 
+- How to name the compressed file? Specifying by the command line's arguments? Or by the uploading plugin (in poker/contrib)?
+
 - Should we clean the packaged files after the Packer be dereferenced? Or we shold clean them explicitly?
 
 - Should we allow the multiple filters in one map in yaml config files?
