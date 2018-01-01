@@ -44,6 +44,14 @@ t.collect("/tmp/tmp_ae3x_poker/etc)
 ## Discussions
 
 - How to name the compressed file? Specifying by the command line's arguments? Or by the uploading plugin (in poker/contrib)?
+  - How about specifing the major name in `task.yml`
+    ~~~yml
+    major_name: backup-ubuntu
+    ~~~
+    The compressed filename like `[marjor_name]-[minor_version]-2018-1-1.tar.gz`. The `minor_version` is used to avoid duplicate name and to identify the version. The `minor_version` is auto assigned to the `maximum minor_version + 1` in the destination. If there are multiple destinations, we increasing based on the maximum one.
+
+    Then don't allow to specifing the name in comandline
+    and the comand-cli shoud only print compressed file path, the others output into log/stderr
 
 - Should we clean the packaged files after the Packer be dereferenced? Or we shold clean them explicitly?
 
